@@ -1,16 +1,50 @@
 ---
 title: Home
+foo: foo
 ---
 
-<h2>Welcome</h2>
+<!-- Page Header -->
+<!-- Set your background image for this header on the line below. -->
+<!--<header class="intro-header" style="background-image: url('img/home-bg.jpg')">-->
+<header class="intro-header" style="background-image: url('img/home-bg.jpg')">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="site-heading">
+          <h1>Luigi Antonini | Blog</h1>
+          <hr class="small">
+          <span class="subheading">Scala, Haskell, and maybe more ... </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
 
-<img src="/images/haskell-logo.png" style="float: right; margin: 10px;" />
-
-<p>Welcome to my blog!</p>
-
-<p>I've reproduced a list of recent posts here for your reading pleasure:</p>
-
-<h2>Posts</h2>
-$partial("templates/post-list.html")$
-
-<p>…or you can find more in the <a href="/archive.html">archives</a>.</p>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      $for(posts)$
+      <div class="post-preview">
+        <a href="$url$">
+          <h2 class="post-title">
+            $title$
+          </h2>
+          <h3 class="post-subtitle">
+            $subtitle$ 
+          </h3>
+        </a>
+        <p class="post-meta">
+          Posted $if(author)$ by $author$ $endif$ on $date$ 
+        </p>
+      </div>
+      <hr>
+      $endfor$
+      <!-- Pager -->
+      <!--<ul class="pager">-->
+      <!--  <li class="next">-->
+      <!--    <a href="#">Older Posts &rarr;</a>-->
+      <!--  </li>-->
+      <!--</ul>-->
+    </div>
+  </div>  
+</div>
