@@ -1,8 +1,26 @@
-<div class="info">
-    Posted on $date$
-    $if(author)$
-        by $author$
-    $endif$
-</div>
+<!-- Page Header -->
+<!-- Set your background image for this header on the line below. -->
+<header class="intro-header" style="background-image: url('../../../../img/post-bg.jpg')">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>$title$</h1>
+          <h2 class="subheading">$subtitle$</h2>
+          <span class="meta">Posted $if(author)$ by $author$ $endif$ on $date$ </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
 
-$body$
+<article>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        $body$
+      </div>
+    </div>
+  </div>
+</article>
+
