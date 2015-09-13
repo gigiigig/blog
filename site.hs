@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
-import           Data.Monoid (mappend)
-import           Hakyll
+import Data.Monoid (mappend)
+import Hakyll
 import Data.List (intersperse, isSuffixOf)
 import Data.List.Split (splitOn)
 import System.FilePath (combine, splitExtension, takeFileName)
@@ -34,20 +34,16 @@ main = hakyll $ do
             >>= loadAndApplyTemplate "templates/default.html" postCtx
             >>= relativizeUrls
 
-    {-create ["archive.html"] $ do-}
-    {-    route idRoute-}
-    {-    compile $ do-}
-    {-        posts <- recentFirst =<< loadAll "posts/*"-}
-    {-        let archiveCtx =-}
-    {-                listField "posts" postCtx (return posts) `mappend`-}
-    {-                constField "title" "Archives"            `mappend`-}
-    {-                defaultContext-}
-
-    {-        makeItem ""-}
-    {-            >>= loadAndApplyTemplate "templates/archive.html" archiveCtx-}
-    {-            >>= loadAndApplyTemplate "templates/default.html" archiveCtx-}
-    {-            >>= relativizeUrls-}
-
+    match "tlp-step-by-step/*" $ do
+        route $ setExtension "html" 
+        compile $ do 
+            let ctx =
+                    field "recent" (\_ -> recentPostList) `mappend`
+                    tlpCtx
+            pandocCompiler
+                >>= loadAndApplyTemplate "templates/tlp.html"     ctx
+                >>= loadAndApplyTemplate "templates/default.html" ctx
+                >>= relativizeUrls
 
     match "index.html" $ do
         route idRoute
@@ -79,3 +75,23 @@ directorizeDate = customRoute (\i -> directorize $ toFilePath i)
         (dirs, ext) = splitExtension $ concat $
           (intersperse "/" date) ++ ["/"] ++ (intersperse "-" rest)
         (date, rest) = splitAt 3 $ splitOn "-" path
+
+--------------------------------------------------------------------------------
+tlpCtx :: Context String
+tlpCtx = 
+    constField "subtitle" "Type Level Programming in Scala step by step" `mappend` 
+    defaultContext
+
+recentPostList :: Compiler String
+recentPostList = do
+    posts   <- fmap (take 10) . chronological =<< recentPosts
+    itemTpl <- loadBody "templates/tlp-menu-item.html"
+    list    <- applyTemplateList itemTpl defaultContext posts 
+    return list 
+
+--------------------------------------------------------------------------------
+recentPosts :: Compiler [Item String]
+recentPosts = do
+    identifiers <- getMatches "tlp-step-by-step/*"
+    return [Item identifier "" | identifier <- identifiers]
+

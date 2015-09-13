@@ -4,6 +4,9 @@ body {
 p {
   margin: 20px 0;
 }
+a {
+  color: #337ab7;
+}
 .intro-header .site-heading {
   padding: 100px 0 50px;
 }
