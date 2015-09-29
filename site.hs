@@ -2,6 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 import           Data.Monoid (mappend)
 import           Hakyll
+import           Hakyll.Web.Paginate
 
 
 --------------------------------------------------------------------------------
@@ -68,5 +69,5 @@ main = hakyll $ do
 postCtx :: Context String
 postCtx =
     dateField "date" "%B %e, %Y" `mappend`
-    defaultContext
+    (paginateContext (1 :: Num) (1 :: Num))
 
