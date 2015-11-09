@@ -1,0 +1,86 @@
+---
+title: Phantom Types
+author: Luigi
+date: 1015-11-05 
+---
+
+We have seen before how using Dependent Types we can do some really basic 
+computations, however to do something actually useful we need more that 
+that, so we are going to see in this post and the next, two techniques 
+that are very useful in Scala in general, and that become even more powerful
+along with TLP.
+
+In this post we are talking about Phantom Types, the reason why they are celled 
+phantom is that they are used as constraints but never instantiated.
+
+```
+  trait Op
+  trait Open extends Op
+  trait Close extends Op
+
+  trait Door[O <: Op]
+  object Door {
+    def apply[S <: Op] = new Door[S] {}
+
+    def open[S <: Close](d: Door[S]) = Door[Open]
+    def close[S <: Open](d: Door[S]) = Door[Close]
+  }
+
+  val closeDoor = Door[Close]
+  val openDoor = Door.open(closeDoor)
+  val closeAgainDoor = Door.close(openDoor)
+
+  // val closeCloseDoor = Door.close(closeDoor)
+  // val openOpenDoor = Door.open(openDoor)
+```
+
+In this example we implement a very simple model, a door that can 
+be open or close, we try using the phantom to guarantee, at compile
+time, that we can only open a close door and close an open door.
+
+We start defining the operations `Open` and `Close` both subclass of `Op`,
+after we define the `Door` as trait, the interesting part is that 
+we add to the trait a type parameter that represent the door status.
+
+We put then de behaviour in the companion object, now for every action
+we add a type constrain, `open` has the constrain `Close` 
+and `close` has `open`.
+
+That is pretty much it, we can after that the first 3 operations 
+work as expected, where when we try to open an open door or close 
+a closed door, it doesn't compile,
+as we see, the traits `Open` and `Close` are never instantiated, 
+we use them as only constraints.
+
+I presented a minimal example just to explain the concept,
+there is already a lot of good and complete material about phantom
+types, these are two great articles, the first shows the builder pattern  
+
+[http://blog.rafaelferreira.net/2008/07/type-safe-builder-pattern-in-scala.html](http://blog.rafaelferreira.net/2008/07/type-safe-builder-pattern-in-scala.html)
+
+and the second how to use them with slick to add safety
+
+[http://danielwestheide.com/blog/2015/06/28/put-your-writes-where-your-master-is-compile-time-restriction-of-slick-effect-types.html](http://danielwestheide.com/blog/2015/06/28/put-your-writes-where-your-master-is-compile-time-restriction-of-slick-effect-types.html)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
