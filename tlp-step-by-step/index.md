@@ -4,7 +4,6 @@ author: Luigi
 date: 1015-10-18 
 ---
 
- - Introduction
  - Dependent Types
  - Abstract Types
  - Infix Operator
