@@ -4,7 +4,6 @@ author: Luigi
 date: 1015-10-18 
 ---
 
- - Abstract Types
  - Infix Operator
  - Phantom Types
  - Implicits Resolution
