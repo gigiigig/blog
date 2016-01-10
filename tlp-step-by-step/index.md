@@ -4,7 +4,6 @@ author: Luigi
 date: 1015-10-18 
 ---
 
- - Implicitly and Type Equality
  - Basic Computations
  - Recursive Data Structure
  - Aux Pattern
