@@ -4,8 +4,6 @@ author: Luigi
 date: 2015-10-19 
 ---
 
-## Introduction 
-
 Let us start this series of blog posts describing what we are
 going to talk about and also why, I mean why should we bother with 
 this stuff? 
