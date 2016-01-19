@@ -1,7 +1,7 @@
 ---
 title: Implicits Resolution
 author: Luigi
-date: 1015-11-07 
+date: 2015-11-07 
 ---
 
 Implicits are a very important feature in Scala, 
@@ -11,7 +11,7 @@ they are used basically in 2 main ways:
   - implicit conversions 
 
 The implicit conversions are very useful in some cases, however 
-not too interesting for what I'm goiing to talk about
+not too interesting for what I'm going to talk about
 so I will focus only on implicit parameters here, 
 this is an interesting article about them [http://www.cakesolutions.net/teamblogs/demystifying-implicits-and-typeclasses-in-scala](http://www.cakesolutions.net/teamblogs/demystifying-implicits-and-typeclasses-in-scala)
 
@@ -20,10 +20,10 @@ this is an interesting article about them [http://www.cakesolutions.net/teamblog
 This is what is interesting for us because implicits are used heavily 
 to do TLP, so we need to understand how they work.
 
-The basic idea of implicit paramters is simple, 
-we declare a funtion that take a implitit paremeter and 
-if there is a single implit instance available in the scope,
-the funtion will take it and we don't need to pass it.
+The basic idea of implicit parameters is simple, 
+we declare a function that takes a implicit parameter and 
+if there is a unique valid implicit instance available in the scope,
+the function will take it automatically and we won't need to pass it explicitly.
 
 ```
   implicit val value = 3
@@ -31,12 +31,13 @@ the funtion will take it and we don't need to pass it.
   foo
 ```
 
-This will print 3, nothing interesting so far, this teachinique is mostly used 
-when we need some kind of context, a famous example is the `ExecutionContext`
-that we need when we use `Future` , map is defined in this way:
+This will print 3, nothing interesting so far, this technique is mostly used 
+when we need some kind of context, a typical example is the `ExecutionContext`
+that we need when we use `Future`, `Fuuture.map` for instance  is defined 
+in this way:
 `def map[S](f: T => S)(implicit executor: ExecutionContext): Future[S]`
 
-Let us go now into the interesting part, implicits parameters are resolved
+Let's go now into the interesting part, implicits parameters are resolved
 also when we add type parameters:
 
 ```
@@ -56,11 +57,15 @@ also when we add type parameters:
 ```
 
 From this example wee see that the compiler is able to resolve 
-implicts even when there are types parameters, and indeed `foo(3)`
-will work properly, why foo(true) won't be able to resolve the paramter.
+implicits even when there are types parameters, and indeed `foo(3)`
+will work properly, while for instance `foo(true)` won't compile because 
+there isn't an instance of `Printer[Boolean]` available in scope, 
+note that we don't need to specify the type of `T`, thanks to the type 
+inference the compiler is able to figure it out, and look for the 
+appropriate `Printer` instance.
 
-An important thing to remember is the compiler, when looking for an implicit
-for certain type, `Printer` in the example, 
+An important thing to remember is that the compiler, 
+when looking for an implicit for a certain type, `Printer` in the example, 
 will look automatically in his companion object, so we can rewrite this example
 in this way:
 
@@ -77,7 +82,7 @@ in this way:
 ```
 
 An interesting thing is that the resolution works even if not all the type
-prameters are know: 
+parameters are known: 
 
 ```
   trait Resolver[T, R] {
@@ -101,29 +106,29 @@ prameters are know:
 
 As we can see, the function `foo` now takes two types parameters,`T` and `R`,
 but only `T` is extracted from the parameter `t` that we pass, `R` is instead 
-computed from the implicit resolution, and as we can see we can then use it as 
-return type, `res1`  and `res2` have to different types, depending on the 
-input that we passed.
+computed from the implicit resolution, and then we can use it as 
+return type, `res1`  and `res2` have indeed two different types, 
+depending on the input that we passed.
 Using implicits here we have been able to do something similar to what
 we did before with [Abstract Types](abstract-types.html), 
 and we can do much more when we combine this techniques together as we will see
-soon.
+later.
 
 ##Type Classes 
 
-Now that we have seen how to use type parameters and implicits together
-we can give it a name, that technique is called Type Classes, 
-in Scala is a pattern but in Haskell is a language feature,
-is the way you have polymorphism in Haskell, there is a lot of material 
-about it, it brings big advantages in many cases.
+Now that we know how to use type parameters and implicits together
+we can give to this a name, this technique is called Type Classes, 
+in Scala it is a pattern but in Haskell is a language feature,
+is the way polymorphism is implemented in Haskell, there is a lot of material 
+about it and I suggest to spent some time understanding it properly..
 
 ##Implicit Recursion
 
-Another important aspect about implicit is that the resolution
-doesn't stop at the first level, we can have functions which take 
-implicit parameters that are resolved through functions that take 
-parameters themselves and so on, 
-until the resolution goes to a defined value, this is also 
+Another important aspect about implicits is that the resolution
+doesn't stop at the first level, we can have functions that take 
+implicit parameters that are resolved through other functions that take 
+implicit parameters themselves and so on, 
+until the resolution goes to a stable value, this is also 
 a very good way to kill the compiler!
 
 ```
@@ -165,16 +170,15 @@ The example should explain how that works,
 first we defined `intPrinter` which is an implicit `val` similar to the ones 
 in the previous examples, now we go to the interesting ones, 
 `optionPrinter` and `listPrinter` are not printer for a specific type like
-`Int`, they are printer for containers type, `Option` and `List`, that contain
-another type that we don't know whan we implement the printer. 
+`Int`, they are printer for containers type, `Option` and `List`, 
+which both take a type parameter.
 
-So in this case what we do is defining the printer as a `def` we add a new typeparamter `V`, and we resolve the printer for the type `V` that we can use
-now to print properly the content of our continers, as we can see this is 
+So in this case what we do is defining the printer as a `def` we add a new type parameter `V`, and we resolve the printer for the type `V` that we can use to print the content of our containers, as we can see this is 
 a recursion, the compiler we'll be able to resolve the printer for `V`
-until it an implict `val` that stops the resolution. 
+until it finds an implicit `val` that stops the resolution. 
 
 Le us see what happens when we call `print(Option(List(1, 3, 6)))` in this 
-exmaple: 
+example: 
 
  - the first type to be resolve is `Option[V]`, so we get `optionPrinter`
    and in this case `V = List`
@@ -184,6 +188,7 @@ exmaple:
     
 the result is indeed `Option[List[1: Int, 3: Int, 6: Int]]`
 
-This mechanism is very importatnt to do computations, we'll see later
-how, remember that this a both a compile time overhead but also at runtime, 
-becuase we'll have to instanciate a `Printer` instance per cycle.
+This mechanism is very important to do type level computations, we'll see later
+how, remember that to do that there is compile time overhead but also runtime, 
+because we'll have to instantiate a `Printer` instance per cycle.
+
