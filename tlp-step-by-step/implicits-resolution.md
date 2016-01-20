@@ -32,7 +32,7 @@ the function will take it automatically and we won't need to pass it explicitly.
 
 This will print 3, nothing interesting so far, this technique is mostly used 
 when we need some kind of context, a typical example is the `ExecutionContext`
-that we need when we use `Future`, `Fuuture.map` for instance  is defined 
+that we need when we use `Future`, `Future.map` for instance  is defined 
 in this way:
 `def map[S](f: T => S)(implicit executor: ExecutionContext): Future[S]`
 
@@ -56,7 +56,7 @@ also when we add type parameters:
 ```
 
 From this example wee see that the compiler is able to resolve 
-implicits even when there are types parameters, and indeed `foo(3)`
+implicits even when there are type parameters, and indeed `foo(3)`
 will work properly, while for instance `foo(true)` won't compile because 
 there isn't an instance of `Printer[Boolean]` available in scope, 
 note that we don't need to specify the type of `T`, thanks to the type 
@@ -126,7 +126,7 @@ about it and I suggest to spent some time understanding it properly..
 Another important aspect about implicits is that the resolution
 doesn't stop at the first level, we can have implicits
 that are generated taking implicit parameters themselves,
-and this can go on until the compiler find a stable implicit value,  
+and this can go on until the compiler finds a stable implicit value,  
 this is a very good way to kill the compiler!
 
 ```
@@ -164,20 +164,19 @@ this is a very good way to kill the compiler!
   // res: Option[List[1: Int, 3: Int, 6: Int]]
 ```
 
-The example should explain how that works, 
+The example should explain how that works,
 first we defined `intPrinter` which is an implicit `val` similar to the ones 
-in the previous examples, now we go to the interesting ones, 
-`optionPrinter` and `listPrinter` are not printer for a specific type like
-`Int`, they are printer for containers type, `Option` and `List`, 
-which both take a type parameter. (when a type take type parameters like `List[T]` is also called type constructor)
+in the previous examples, now we go to the interesting ones,
+`optionPrinter` and `listPrinter` are not printer for a specific type like`Int`, 
+they are printer for containers type, `Option` and `List`, which both take a type parameter. (when a type take type parameters like `List[T]` is also called type constructor)
 
 In these cases we can define the implicit for them as `def` instead of `val` and we add a type parameter `V`, we resolve implicitly the printer for the type `V` that we use to print the content of our containers, and the compiler we'll go on resolving the implicits until it finds an implicit `val` that stops the resolution. 
 
 Le us see what happens when we call `print(Option(List(1, 3, 6)))` in this 
 example: 
 
- - the first type to be resolve is `Option[V]`, so we get `optionPrinter`
-   and in this case `V = List`
+ - the first type to be resolve is `Option[V]`, so we get `optionPrinter` and in this case  
+   `V = List`
  - the compiler then will look for a Printer[List] and resolves `listPrinter`
    and now we have `V = Int`
     
