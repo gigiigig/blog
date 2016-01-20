@@ -42,7 +42,7 @@ main = hakyll $ do
                     tlpCtx
             pandocCompiler
                 >>= loadAndApplyTemplate "templates/tlp.html"     ctx
-                >>= loadAndApplyTemplate "templates/default.html" ctx
+                >>= loadAndApplyTemplate "templates/tlpDefault.html" ctx
                 >>= relativizeUrls
 
     match "index.html" $ do
