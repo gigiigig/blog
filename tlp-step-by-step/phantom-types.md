@@ -6,7 +6,7 @@ date: 2015-11-05
 
 We have seen before how using Dependent Types we can do some really basic 
 computations, however to do something actually useful we need more that 
-that, so we are going to see in this post and the next, two techniques 
+that, so we are going to see, in this post and the next, two techniques 
 that are very useful in Scala in general, and that become even more powerful
 along with TLP.
 
@@ -41,8 +41,8 @@ We start defining the operations `Open` and `Close` both subclasses of `Op`,
 after we define the `Door` as trait, the interesting part is that 
 we add to the trait a type parameter that represent the door status.
 
-We put then de behaviour in the companion object, now for every action
-we add a type constrain, the method `open` has the constrain `Close` 
+We put then the behaviour in the companion object, now for every action
+we add a type constraint, the method `open` has the constraint `Close` 
 and `close` has `Open`.
 
 That is pretty much it, we can see then in the example that the first 3 operations work as expected and after, when we try to open an `Open` door or close 

@@ -15,13 +15,12 @@ not too interesting for what I'm going to talk about
 so I will focus only on implicit parameters here, 
 this is an interesting article about them [http://www.cakesolutions.net/teamblogs/demystifying-implicits-and-typeclasses-in-scala](http://www.cakesolutions.net/teamblogs/demystifying-implicits-and-typeclasses-in-scala)
 
-##Implicit Parameters 
+## Implicit Parameters 
 
-This is what is interesting for us because implicits are used heavily 
-to do TLP, so we need to understand how they work.
+This is what is interesting for us because implicit parameters are heavily used to do TLP in Scala, so we need to understand how they work.
 
 The basic idea of implicit parameters is simple, 
-we declare a function that takes a implicit parameter and 
+we declare a function that takes an implicit parameter and 
 if there is a unique valid implicit instance available in the scope,
 the function will take it automatically and we won't need to pass it explicitly.
 
@@ -114,7 +113,7 @@ we did before with [Abstract Types](abstract-types.html),
 and we can do much more when we combine this techniques together as we will see
 later.
 
-##Type Classes 
+## Type Classes 
 
 Now that we know how to use type parameters and implicits together
 we can give to this a name, this technique is called Type Classes, 
@@ -122,14 +121,13 @@ in Scala it is a pattern but in Haskell is a language feature,
 is the way polymorphism is implemented in Haskell, there is a lot of material 
 about it and I suggest to spent some time understanding it properly..
 
-##Implicit Recursion
+## Multi-step Resolution 
 
 Another important aspect about implicits is that the resolution
-doesn't stop at the first level, we can have functions that take 
-implicit parameters that are resolved through other functions that take 
-implicit parameters themselves and so on, 
-until the resolution goes to a stable value, this is also 
-a very good way to kill the compiler!
+doesn't stop at the first level, we can have implicits
+that are generated taking implicit parameters themselves,
+and this can go on until the compiler find a stable implicit value,  
+this is a very good way to kill the compiler!
 
 ```
   trait Printer[T] {
@@ -171,11 +169,9 @@ first we defined `intPrinter` which is an implicit `val` similar to the ones
 in the previous examples, now we go to the interesting ones, 
 `optionPrinter` and `listPrinter` are not printer for a specific type like
 `Int`, they are printer for containers type, `Option` and `List`, 
-which both take a type parameter.
+which both take a type parameter. (when a type take type parameters like `List[T]` is also called type constructor)
 
-So in this case what we do is defining the printer as a `def` we add a new type parameter `V`, and we resolve the printer for the type `V` that we can use to print the content of our containers, as we can see this is 
-a recursion, the compiler we'll be able to resolve the printer for `V`
-until it finds an implicit `val` that stops the resolution. 
+In these cases we can define the implicit for them as `def` instead of `val` and we add a type parameter `V`, we resolve implicitly the printer for the type `V` that we use to print the content of our containers, and the compiler we'll go on resolving the implicits until it finds an implicit `val` that stops the resolution. 
 
 Le us see what happens when we call `print(Option(List(1, 3, 6)))` in this 
 example: 
@@ -184,11 +180,8 @@ example:
    and in this case `V = List`
  - the compiler then will look for a Printer[List] and resolves `listPrinter`
    and now we have `V = Int`
- - and finally we hit Printer[Int] which is a `val` and the recursion stops  
     
-the result is indeed `Option[List[1: Int, 3: Int, 6: Int]]`
+The result is indeed `Option[List[1: Int, 3: Int, 6: Int]]`
 
-This mechanism is very important to do type level computations, we'll see later
-how, remember that to do that there is compile time overhead but also runtime, 
-because we'll have to instantiate a `Printer` instance per cycle.
+This mechanism is very important to do type level computations, we'll see later how, remember that to do this there is compile time overhead but also runtime, because we'll have to instantiate a `Printer` instance per cycle.
 

@@ -23,7 +23,7 @@ Simple, because it is fun!
 Well that too, but the important part to me here is to understand that   
 _**stronger is your type system more flexibility you get**_    
 that could sound a bit a counterintuitive, but stay with me for a minute.
-One of the reasons why many *dynamic developers* criticize Java 
+One of the reasons why many *"dynamic developers"* criticize Java 
 is that adding types you lose a lot of flexibility, this is partially true,
 but the great thing is that adding more power to your type system
 you get back this flexibility, and with a big advantage!
@@ -31,7 +31,7 @@ you get back this flexibility, and with a big advantage!
 The advantage is that you can do *dynamic-like* things at compile time!
 This is where you need type level computations, if you can
 compute types, you get an incredible flexibility without losing
-the correctness that you get with a static language.
+the correctness that you get with a static language and actually you get even more.
 
 Let me stop the ranting now and show an example to understand what 
 I mean with that, just try to focus on the advantages more than
@@ -95,7 +95,7 @@ and this is a very good reason to do TLP in my opinion.
 ## Shapeless
 
 When talking about TLP in Scala it is mandatory to mention Shapeless,
-it is the library that pushed the boundaries of what is possible to do in Scala with types, many of the examples that we are going to see at the end are based on Shapeless, and basically every library that is relying on TLP depends on Shapeless.
+it is the library that pushed the boundaries of what is possible to do in Scala with types, many of the examples that we are going to see later are based on Shapeless, and basically every library that is relying on TLP depends on Shapeless.
 
 ## How to read
 
@@ -106,14 +106,18 @@ for real world use cases, so there isn't a particular order to
 read the articles, feel free to jump directly to the ones
 you feel useful for you.
 
-## Help Me!
+## Help Me, this is still a WIP!
 
-I'm not a TLP expert, writing this series is a way for me to 
+This is not finished, I have in mind still a few posts that I hope
+to write soon, if there is something that you would like me to add
+feel free to ask.
+
+It's also very important to say that I'm not a TLP expert, 
+writing this series is a way for me to 
 revise all this concepts and to help other people to learn them,
 however there might be errors, things that I misunderstood 
 or even English errors as it is not my native language, 
-feel free to add comments here or open a pull request in GitHub,
-the code of this website is open source.
+feel free to add comments here or open a pull request in [GitHub](https://github.com/gigiigig/blog), the code of this website is open source .
 
 Ok then, let's start!
 

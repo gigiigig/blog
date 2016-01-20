@@ -12,7 +12,7 @@ This is the definition of Dependent Types according to Wikipedia:
 
 **_In computer science and logic, a dependent type is a type that depends on a value._**
 
-Usually in languages like Java, the type and the value worlds are totally separated, we use the types to give us more information about the values and add more constraints, but this is arbitrary, because we define them upfront.
+Usually in languages like Java, the type and the value worlds are totally separated, we use the types to give us information about the values and add constraints, but this is arbitrary, because we define them upfront.
 
 With Dependent Types we remove this separation between the two worlds,
 and we get two powerful features: 
@@ -22,8 +22,7 @@ and we get two powerful features:
 
 ### Idris
 
-Now, before starting to talk about Scala, let's see an example of dependent types using a full dependently typed language, and we will go back to see what 
-we have in Scala later. The language I'm going to show is Idris.
+Now, before starting to talk about Scala, let's see an example of dependent types using a full dependently typed language, and we will go back to see what we have in Scala later. The language I'm going to show is Idris.
 
 (These examples are copied from the [official documentation](http://docs.idris-lang.org/en/latest/tutorial/typesfuns.html))
 
@@ -44,9 +43,8 @@ and every input parameter is separated by `->`, the last type in the expression 
 
 What we can see is that this function takes a `Bool` and returns 
 a `Type`, so this is a function that computes a type as result and 
-not a value, we will be able then to use this in a *normal* function (from
-value to value), to compute the type of one value **depending** on another 
-value.
+not a value, we will be able then to use this in a *"normal"* function (from
+value to value), to compute the **type** of one value **depending** on another value.
 
 In this case the function is using pattern matching on the boolean, 
 so if the input is `True`, the result type will be a `Nat` (which stands for natural number), otherwise we will have a `List Nat` or in Scala we would say`List[Nat]`.
@@ -89,12 +87,12 @@ they represent the size of the vector, we are saying that the resulting
 Vector has to have a size of `n + m` 
 (the syntax is not valid in Scala of course), Idris compiler is basically
 able to inspect the implementation and verify that this extra constrain 
-is respected! 
+is respected. 
 
 This is cool right!
 
 That's only a small example of what is possible with Idris and Dependent
-Types, I suggest you to go to the Idris website to get more informations.
+Types, I suggest you to go to the [Idris website](http://www.idris-lang.org/) to get more information.
 
 ### Scala
 
@@ -125,8 +123,8 @@ val c: foo1.Bar = new foo1.Bar
 
 ```
 
-In this example I just nested to class Foo and Bar, I chose classes just
-for syntax reasons, they could be also traits or case classes
+In this example I just nested 2 classes Foo and Bar, I chose classes just
+for syntactic reasons, they could be also traits or case classes
 and that would be the same, as we can see there are 2 ways to refer to 
 a nested type:
 
@@ -137,7 +135,7 @@ a nested type:
 - `.` means that we can only refer the Bar instances that belong to 
   a specif instance of Foo
 
-Looking at the previous code example the difference is quite clear,
+Looking at the previous example the difference is quite clear,
 the values `a` and `b` of type `Foo#Bar` can accept every Bar,
 instead as you can see `d` won't work because `foo1.Bar` is different from
 `foo2.Bar`.
