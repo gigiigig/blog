@@ -2,6 +2,7 @@
 title: Dependent Types
 author: Luigi
 date: 2015-10-20
+updated: 2016-01-22
 ---
 
 Before start talking about TLP, there are a few concepts 
@@ -107,7 +108,8 @@ In Scala we can define nested components, for instance we can define
 a class inside a trait, a trait inside a class and so on ...
 
 ```
-class Foo {                                                                      class Bar
+class Foo {
+  class Bar
 }
 
 val foo1 = new Foo

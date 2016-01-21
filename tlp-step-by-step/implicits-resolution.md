@@ -2,6 +2,7 @@
 title: Implicits Resolution
 author: Luigi
 date: 2015-11-07 
+updated: 2016-01-22
 ---
 
 Implicits are a very important feature in Scala, 
@@ -25,9 +26,9 @@ if there is a unique valid implicit instance available in the scope,
 the function will take it automatically and we won't need to pass it explicitly.
 
 ```
-  implicit val value = 3
-  def foo(implicit i: Int) = println(i)
-  foo
+implicit val value = 3
+def foo(implicit i: Int) = println(i)
+foo
 ```
 
 This will print 3, nothing interesting so far, this technique is mostly used 
@@ -40,19 +41,19 @@ Let's go now into the interesting part, implicits parameters are resolved
 also when we add type parameters:
 
 ```
-  trait Printer[T] {
-    def print(t: T): String
-  }
+trait Printer[T] {
+  def print(t: T): String
+}
 
-  implicit val sp: Printer[Int] = new Printer[Int] {
-    def print(i :Int) = i.toString
-  }
+implicit val sp: Printer[Int] = new Printer[Int] {
+  def print(i :Int) = i.toString
+}
 
-  def foo[T](t: T)(implicit p: Printer[T]) = p.print(t)
+def foo[T](t: T)(implicit p: Printer[T]) = p.print(t)
 
-  val res = foo(3)
-  // val res = foo(false)
-  println(s"res: ${res}")
+val res = foo(3)
+// val res = foo(false)
+println(s"res: ${res}")
 ```
 
 From this example wee see that the compiler is able to resolve 
@@ -69,38 +70,38 @@ will look automatically in his companion object, so we can rewrite this example
 in this way:
 
 ```
-  trait Printer[T] {
-    def print(t: T): String
-  }
+trait Printer[T] {
+  def print(t: T): String
+}
 
-  object Printer {
-    implicit val sp: Printer[Int] = new Printer[Int] {
-      def print(i :Int) = i.toString
-    }
+object Printer {
+  implicit val sp: Printer[Int] = new Printer[Int] {
+    def print(i :Int) = i.toString
   }
+}
 ```
 
 An interesting thing is that the resolution works even if not all the type
 parameters are known: 
 
 ```
-  trait Resolver[T, R] {
-    def resolve(t: T): R
-  }
- 
-  object Resolver {
-    implicit val ib: Resolver[Int, Boolean] = new Resolver[Int, Boolean] {
-      def resolve(i :Int): Boolean = i > 1
-    }
-    implicit val sd: Resolver[String, Double] = new Resolver[String, Double] {
-      def resolve(i :String): Double = i.length.toDouble
-    }
-  }
+trait Resolver[T, R] {
+  def resolve(t: T): R
+}
 
-  def foo[T, R](t: T)(implicit p: Resolver[T, R]): R = p.resolve(t)
+object Resolver {
+  implicit val ib: Resolver[Int, Boolean] = new Resolver[Int, Boolean] {
+    def resolve(i :Int): Boolean = i > 1
+  }
+  implicit val sd: Resolver[String, Double] = new Resolver[String, Double] {
+    def resolve(i :String): Double = i.length.toDouble
+  }
+}
 
-  val res1: Boolean = foo(3)
-  val res2: Double = foo("ciao")
+def foo[T, R](t: T)(implicit p: Resolver[T, R]): R = p.resolve(t)
+
+val res1: Boolean = foo(3)
+val res2: Double = foo("ciao")
 ```
 
 As we can see, the function `foo` now takes two types parameters,`T` and `R`,
@@ -130,38 +131,38 @@ and this can go on until the compiler finds a stable implicit value,
 this is a very good way to kill the compiler!
 
 ```
-  trait Printer[T] {
-    def print(t: T): String
+trait Printer[T] {
+  def print(t: T): String
+}
+
+object Printer {
+  implicit val intPrinter: Printer[Int] = new Printer[Int] {
+    def print(i: Int) = s"$i: Int"
   }
 
-  object Printer {
-    implicit val intPrinter: Printer[Int] = new Printer[Int] {
-      def print(i: Int) = s"$i: Int"
+  implicit def optionPrinter[V](implicit pv: Printer[V]): Printer[Option[V]] =
+    new Printer[Option[V]] {
+      def print(ov: Option[V]) = ov match {
+        case None => "None"
+        case Some(v) => s"Option[${pv.print(v)}]"
+      }
     }
 
-    implicit def optionPrinter[V](implicit pv: Printer[V]): Printer[Option[V]] =
-      new Printer[Option[V]] {
-        def print(ov: Option[V]) = ov match {
-          case None => "None"
-          case Some(v) => s"Option[${pv.print(v)}]"
-        }
+  implicit def listPrinter[V](implicit pv: Printer[V]): Printer[List[V]] =
+    new Printer[List[V]] {
+      def print(ov: List[V]) = ov match {
+        case Nil => "Nil"
+        case l: List[V] => s"List[${l.map(pv.print).mkString(", ")}]"
       }
+    }
+}
 
-    implicit def listPrinter[V](implicit pv: Printer[V]): Printer[List[V]] =
-      new Printer[List[V]] {
-        def print(ov: List[V]) = ov match {
-          case Nil => "Nil"
-          case l: List[V] => s"List[${l.map(pv.print).mkString(", ")}]"
-        }
-      }
-  }
+def print[T](t: T)(implicit p: Printer[T]) = p.print(t)
 
-  def print[T](t: T)(implicit p: Printer[T]) = p.print(t)
+val res = print(Option(List(1, 3, 6)))
+println(s"res: ${res}")
 
-  val res = print(Option(List(1, 3, 6)))
-  println(s"res: ${res}")
-
-  // res: Option[List[1: Int, 3: Int, 6: Int]]
+// res: Option[List[1: Int, 3: Int, 6: Int]]
 ```
 
 The example should explain how that works,

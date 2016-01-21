@@ -81,7 +81,7 @@ Looking at this example we can see that
 
 We can see now that we are computing 2 things here, the number 
 of parameters that we take, and their types.
-If you look at the code you'll see that `paramters` is not defined
+If you look at the code you'll see that `parameters` is not defined
 with some crazy method overload, there is a type level computation 
 (which is still crazy probably ;)
 that is able to compute the right type for the function `f`.
