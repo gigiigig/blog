@@ -92,10 +92,14 @@ to do something similar in Java, but in Scala we can do this
 at compile time, and don't have to give up on correctness,
 and this is a very good reason to do TLP in my opinion.
 
-## Shapeless
+## Libraries
 
-When talking about TLP in Scala it is mandatory to mention Shapeless,
-it is the library that pushed the boundaries of what is possible to do in Scala with types, many of the examples that we are going to see later are based on Shapeless, and basically every library that is relying on TLP depends on Shapeless.
+When talking about TLP in Scala it is mandatory to mention [Shapeless](https://github.com/milessabin/shapeless), it is the library that mostly pushed the boundaries of what is possible to do in Scala with types, many of the examples that we are going to see later are based on Shapeless, and many libraries that are relying on TLP depend on it.
+
+There are however other libraries that are relying on TLP, 
+probably the most famous is [Slick](http://slick.typesafe.com/), 
+this is a very good proof that TLP is actually useful in the real
+world and not only a pure technical exercise.
 
 ## How to read
 
