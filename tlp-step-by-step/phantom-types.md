@@ -2,6 +2,7 @@
 title: Phantom Types
 author: Luigi
 date: 2015-11-05 
+updated: 2016-01-22
 ---
 
 We have seen before how using Dependent Types we can do some really basic 
@@ -10,27 +11,27 @@ that, so we are going to see, in this post and the next, two techniques
 that are very useful in Scala in general, and that become even more powerful
 along with TLP.
 
-In this post we are talking about Phantom Types, the reason why they are celled phantom is that they are used as type constraints but never instantiated.
+In this post we are talking about Phantom Types, the reason why they are called phantom is that they are used as type constraints but never instantiated.
 
 ```
-  trait Op
-  trait Open extends Op
-  trait Close extends Op
+trait Op
+trait Open extends Op
+trait Close extends Op
 
-  trait Door[O <: Op]
-  object Door {
-    def apply[S <: Op] = new Door[S] {}
+trait Door[O <: Op]
+object Door {
+  def apply[S <: Op] = new Door[S] {}
 
-    def open[S <: Close](d: Door[S]) = Door[Open]
-    def close[S <: Open](d: Door[S]) = Door[Close]
-  }
+  def open[S <: Close](d: Door[S]) = Door[Open]
+  def close[S <: Open](d: Door[S]) = Door[Close]
+}
 
-  val closeDoor = Door[Close]
-  val openDoor = Door.open(closeDoor)
-  val closeAgainDoor = Door.close(openDoor)
+val closeDoor = Door[Close]
+val openDoor = Door.open(closeDoor)
+val closeAgainDoor = Door.close(openDoor)
 
-  // val closeCloseDoor = Door.close(closeDoor)
-  // val openOpenDoor = Door.open(openDoor)
+// val closeCloseDoor = Door.close(closeDoor)
+// val openOpenDoor = Door.open(openDoor)
 ```
 
 In this example we implement a very simple model, a door that can 
