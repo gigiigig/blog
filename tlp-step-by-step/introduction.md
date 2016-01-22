@@ -2,6 +2,7 @@
 title: Introduction
 author: Luigi
 date: 2015-10-19 
+edited: 2016-01-22 
 ---
 
 Let us start this series of blog posts describing what we are

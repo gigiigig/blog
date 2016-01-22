@@ -7,7 +7,12 @@
         <div class="post-heading">
           <h1>$title$</h1>
           <h2 class="subheading">$subtitle$</h2>
-          <span class="meta">Posted $if(author)$ by $author$ $endif$ on $date$ </span>
+          <span class="meta">
+            Posted $if(author)$ by $author$ $endif$ on $date$
+            <small>
+              $if(edited)$ Last edit: $edited$ $endif$  
+            </small>
+          </span>
         </div>
       </div>
     </div>
