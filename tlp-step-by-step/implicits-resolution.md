@@ -117,10 +117,20 @@ later.
 ## Type Classes 
 
 Now that we know how to use type parameters and implicits together
-we can give to this a name, this technique is called Type Classes, 
-in Scala it is a pattern but in Haskell is a language feature,
-is the way polymorphism is implemented in Haskell, there is a lot of material 
-about it and I suggest to spent some time understanding it properly..
+we can give to this a name, this technique is called **Type Classes**, 
+it is the way Polymorphism is implemented in Haskell, we can encode them in Scala as well, the most common way to do it is basically what we did before, an abstract type that takes one type parameter  
+`trait Printer[T] { ... }` and different implicit implementations in the companion object,
+there are however other ways to encode them, it's worth to mention: 
+
+ - [Simulacrum](https://github.com/mpilquist/simulacrum) 
+  The main goal is to avoid encoding inconsistencies using macros 
+ - [Scato](https://github.com/aloiscochard/scato)
+  The main goal is to avoid inheritance to encode the hierarchy of the classes using instead natural transformations 
+
+I'm not going to explain them however here, there is a lot of great material around. 
+
+[Demystifying Implicits and Typeclasses in Scala](http://www.cakesolutions.net/teamblogs/demystifying-implicits-and-typeclasses-in-scala)  
+[The Neophyte's Guide to Scala Part 12: Type Classes](http://danielwestheide.com/blog/2013/02/06/the-neophytes-guide-to-scala-part-12-type-classes.html)
 
 ## Multi-step Resolution 
 
