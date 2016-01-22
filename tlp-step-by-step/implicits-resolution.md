@@ -175,7 +175,7 @@ println(s"res: ${res}")
 // res: Option[List[1: Int, 3: Int, 6: Int]]
 ```
 
-The example should explain how that works,
+Let's look a this example to understand how this works,
 first we defined `intPrinter` which is an implicit `val` similar to the ones 
 in the previous examples, now we go to the interesting ones,
 `optionPrinter` and `listPrinter` are not printer for a specific type like`Int`, 
