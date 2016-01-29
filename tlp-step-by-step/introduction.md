@@ -110,6 +110,11 @@ for real world use cases, so there isn't a particular order to
 read the articles, feel free to jump directly to the ones
 you feel useful for you.
 
+## Credits 
+
+A special thanks goes to Alois Cochard [\@aloiscochard](https://twitter.com/aloiscochard)
+for teaching me this stuff and reviewing this series.
+
 ## Help Me, this is still a WIP!
 
 This is not finished, I have in mind still a few posts that I hope
