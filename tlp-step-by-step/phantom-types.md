@@ -14,23 +14,23 @@ along with TLP.
 In this post we are talking about Phantom Types, the reason why they are called phantom is that they are used as type constraints but never instantiated.
 
 ```
-trait Op
-trait Open extends Op
-trait Close extends Op
+trait Status
+trait Open extends Status
+trait Closed extends Status
 
-trait Door[O <: Op]
+trait Door[S <: Status]
 object Door {
-  def apply[S <: Op] = new Door[S] {}
+  def apply[S <: Status] = new Door[S] {}
 
-  def open[S <: Close](d: Door[S]) = Door[Open]
-  def close[S <: Open](d: Door[S]) = Door[Close]
+  def open[S <: Closed](d: Door[S]) = Door[Open]
+  def close[S <: Open](d: Door[S]) = Door[Closed]
 }
 
-val closeDoor = Door[Close]
-val openDoor = Door.open(closeDoor)
-val closeAgainDoor = Door.close(openDoor)
+val closedDoor = Door[Closed]
+val openDoor = Door.open(closedDoor)
+val closedAgainDoor = Door.close(openDoor)
 
-// val closeCloseDoor = Door.close(closeDoor)
+// val closedClosedDoor = Door.close(closedDoor)
 // val openOpenDoor = Door.open(openDoor)
 ```
 
@@ -38,17 +38,17 @@ In this example we implement a very simple model, a door that can
 be open or close, and we try to use the phantoms to guarantee, at compile
 time, that we can only open a close door and close an open door.
 
-We start defining the operations `Open` and `Close` both subclasses of `Op`,
+We start defining the statuses `Open` and `Closed` both subclasses of `Status`,
 after we define the `Door` as trait, the interesting part is that 
 we add to the trait a type parameter that represent the door status.
 
 We put then the behaviour in the companion object, now for every action
-we add a type constraint, the method `open` has the constraint `Close` 
+we add a type constraint, the method `open` has the constraint `Closed` 
 and `close` has `Open`.
 
 That is pretty much it, we can see then in the example that the first 3 operations work as expected and after, when we try to open an `Open` door or close 
-a `Close` door, it doesn't compile which is what we wanted. 
-It's important to notice that the traits `Open` and `Close` are never instantiated, we use them as only constraints.
+a `Closed` door, it doesn't compile which is what we wanted. 
+It's important to notice that the traits `Open` and `Closed` are never instantiated, we use them as only constraints.
 
 I presented a minimal example just to explain the concept,
 there is already a lot of good and complete material about Phantom
