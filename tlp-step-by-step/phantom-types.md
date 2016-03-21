@@ -6,7 +6,7 @@ updated: 2016-01-22
 ---
 
 We have seen before how using Dependent Types we can do some really basic 
-computations, however to do something actually useful we need more that 
+computations, however to do something actually useful we need more than 
 that, so we are going to see, in this post and the next, two techniques 
 that are very useful in Scala in general, and that become even more powerful
 along with TLP.
