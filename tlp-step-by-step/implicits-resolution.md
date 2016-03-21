@@ -183,7 +183,7 @@ they are printer for containers type, `Option` and `List`, which both take a typ
 
 In these cases we can define the implicit for them as `def` instead of `val` and we add a type parameter `V`, we resolve implicitly the printer for the type `V` that we use to print the content of our containers, and the compiler we'll go on resolving the implicits until it finds an implicit `val` that stops the resolution. 
 
-Le us see what happens when we call `print(Option(List(1, 3, 6)))` in this 
+Let us see what happens when we call `print(Option(List(1, 3, 6)))` in this 
 example: 
 
  - the first type to be resolve is `Option[V]`, so we get `optionPrinter` and in this case  
