@@ -16,7 +16,7 @@ main = hakyll $ do
     match "css/*" $ do
         route   idRoute
         compile compressCssCompiler
-   
+
     match "js/*" $ do
         route   idRoute
         compile copyFileCompiler
@@ -28,21 +28,21 @@ main = hakyll $ do
             >>= relativizeUrls
 
     match "posts/*" $ do
-        route $ directorizeDate `composeRoutes` setExtension "html" 
+        route $ directorizeDate `composeRoutes` setExtension "html"
         compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/post.html"    postCtx
             >>= loadAndApplyTemplate "templates/default.html" postCtx
             >>= relativizeUrls
 
     match "tlp-step-by-step/*" $ do
-        route $ setExtension "html" 
-        compile $ do 
+        route $ setExtension "html"
+        compile $ do
             let ctx =
-                    field "recent" (\_ -> recentPostList) `mappend`
+                    field "recent" (\_ -> recentTlpPostList) `mappend`
                     tlpCtx
             pandocCompiler
                 >>= loadAndApplyTemplate "templates/tlp.html"     ctx
-                >>= loadAndApplyTemplate "templates/tlpDefault.html" ctx
+                >>= loadAndApplyTemplate "templates/default.html" ctx
                 >>= relativizeUrls
 
     match "index.html" $ do
@@ -70,7 +70,7 @@ postCtx =
 directorizeDate :: Routes
 directorizeDate = customRoute (\i -> directorize $ toFilePath i)
   where
-    directorize path = dirs ++ ext 
+    directorize path = dirs ++ ext
       where
         (dirs, ext) = splitExtension $ concat $
           (intersperse "/" date) ++ ["/"] ++ (intersperse "-" rest)
@@ -78,20 +78,20 @@ directorizeDate = customRoute (\i -> directorize $ toFilePath i)
 
 --------------------------------------------------------------------------------
 tlpCtx :: Context String
-tlpCtx = 
-    constField "subtitle" "Type Level Programming in Scala step by step" `mappend` 
+tlpCtx =
+    constField "series_title" "Type Level Programming in Scala step by step" `mappend`
     defaultContext
 
-recentPostList :: Compiler String
-recentPostList = do
-    posts   <- fmap (take 10) . chronological =<< recentPosts
+recentTlpPostList :: Compiler String
+recentTlpPostList = do
+    posts   <- fmap (take 10) . chronological =<< recentTlpPosts
     itemTpl <- loadBody "templates/tlp-menu-item.html"
-    list    <- applyTemplateList itemTpl defaultContext posts 
-    return list 
+    list    <- applyTemplateList itemTpl defaultContext posts
+    return list
 
 --------------------------------------------------------------------------------
-recentPosts :: Compiler [Item String]
-recentPosts = do
+recentTlpPosts :: Compiler [Item String]
+recentTlpPosts = do
     identifiers <- getMatches "tlp-step-by-step/*"
     return [Item identifier "" | identifier <- identifiers]
 
