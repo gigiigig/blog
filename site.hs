@@ -38,8 +38,19 @@ main = hakyll $ do
         route $ setExtension "html"
         compile $ do
             let ctx =
-                    field "recent" (\_ -> recentTlpPostList) `mappend`
+                    field "recent" (\_ -> recentPostList "tlp-step-by-step") `mappend`
                     tlpCtx
+            pandocCompiler
+                >>= loadAndApplyTemplate "templates/tlp.html"     ctx
+                >>= loadAndApplyTemplate "templates/default.html" ctx
+                >>= relativizeUrls
+
+    match "typed-fp/*" $ do
+        route $ setExtension "html"
+        compile $ do
+            let ctx =
+                    field "recent" (\_ -> recentPostList "typed-fp") `mappend`
+                    tfpCtx
             pandocCompiler
                 >>= loadAndApplyTemplate "templates/tlp.html"     ctx
                 >>= loadAndApplyTemplate "templates/default.html" ctx
@@ -59,7 +70,6 @@ main = hakyll $ do
                 >>= relativizeUrls
 
     match "templates/*" $ compile templateCompiler
-
 
 --------------------------------------------------------------------------------
 postCtx :: Context String
@@ -82,16 +92,21 @@ tlpCtx =
     constField "series_title" "Type Level Programming in Scala step by step" `mappend`
     defaultContext
 
-recentTlpPostList :: Compiler String
-recentTlpPostList = do
-    posts   <- fmap (take 10) . chronological =<< recentTlpPosts
-    itemTpl <- loadBody "templates/tlp-menu-item.html"
+recentPostList :: String -> Compiler String
+recentPostList folder = do
+    posts   <- fmap (take 10) . chronological =<< itemsByFolder folder
+    itemTpl <- loadBody "templates/menu-item.html"
     list    <- applyTemplateList itemTpl defaultContext posts
     return list
 
---------------------------------------------------------------------------------
-recentTlpPosts :: Compiler [Item String]
-recentTlpPosts = do
-    identifiers <- getMatches "tlp-step-by-step/*"
+itemsByFolder :: String -> Compiler [Item String]
+itemsByFolder folder = do
+    identifiers <- getMatches $ fromGlob (folder ++ "/*")
     return [Item identifier "" | identifier <- identifiers]
+
+--------------------------------------------------------------------------------
+tfpCtx :: Context String
+tfpCtx =
+    constField "series_title" "Typed Funtional Programming Principles" `mappend`
+    defaultContext
 
