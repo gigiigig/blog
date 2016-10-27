@@ -52,7 +52,7 @@ main = hakyll $ do
                     field "recent" (\_ -> recentPostList "typed-fp") `mappend`
                     tfpCtx
             pandocCompiler
-                >>= loadAndApplyTemplate "templates/tlp.html"     ctx
+                >>= loadAndApplyTemplate "templates/tfp.html"     ctx
                 >>= loadAndApplyTemplate "templates/default.html" ctx
                 >>= relativizeUrls
 
