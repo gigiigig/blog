@@ -77,7 +77,7 @@ Looking at this example we can see that
 - the parameters in the function have the type that we asked for  
   `'color => String`  
   `'bgColor.?' => Option[String]`  
-  `'cound.as[Int] => Int`  
+  `'count.as[Int] => Int`  
 
 We can see now that we are computing 2 things here, the number 
 of parameters that we take, and their types.
